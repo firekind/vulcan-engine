@@ -6,7 +6,6 @@ setup(
     packages=find_packages(exclude=['blank']),
     install_requires=[
         'numpy==1.16.4',
-        'cython==0.29.7',
         'PyOpenGL==3.1.3b1',
         'PyOpenGL-accelerate==3.1.3b1',
         'glfw==1.8.1',
