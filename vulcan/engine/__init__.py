@@ -1,14 +1,12 @@
 import sys
-from ctypes import c_float, c_int
 
 import glfw
 import numpy as np
 
 from OpenGL.GL import *
 from PIL import Image
-from abc import ABCMeta, abstractmethod
-from vulcan.engine import utils
-from vulcan.engine.utils import Matrix4f, Material
+from abc import ABC, abstractmethod
+from vulcan.engine.utils import Matrix4f, Material, Vector2f, Vector3f, Vector4f
 
 
 class Display:
@@ -20,8 +18,7 @@ class Display:
         pass
 
     @staticmethod
-    def init(width=1200, height=720, title='Python-opengl'):
-        # type: (int, int, str) -> None
+    def init(width: int = 1200, height: int = 720, title: str = 'Python-opengl') -> None:
         """
         Initializes a window.
         Args:
@@ -49,8 +46,7 @@ class Display:
         return Display.window
 
     @staticmethod
-    def add_window_hints():
-        # type: () -> None
+    def add_window_hints() -> None:
         """
         Adds window hints.
         Returns:
@@ -63,8 +59,7 @@ class Display:
         glfw.window_hint(glfw.OPENGL_PROFILE, glfw.OPENGL_CORE_PROFILE)
 
     @staticmethod
-    def window_closed():
-        # type: () -> bool
+    def window_closed() -> bool:
         """
         Checks if window is closed.
         Returns:
@@ -73,8 +68,7 @@ class Display:
         return glfw.window_should_close(Display.window)
 
     @staticmethod
-    def swap_buffers():
-        # type: () -> None
+    def swap_buffers() -> None:
         """
         Swaps the front and back buffers
         Returns:
@@ -83,8 +77,7 @@ class Display:
         glfw.swap_buffers(Display.window)
 
     @staticmethod
-    def poll_events():
-        # type: () -> None
+    def poll_events() -> None:
         """
         Polls for and process events.
         Returns:
@@ -93,8 +86,7 @@ class Display:
         glfw.poll_events()
 
     @staticmethod
-    def terminate():
-        # type: () -> None
+    def terminate() -> None:
         """
         Terminates the window
         Returns:
@@ -104,7 +96,7 @@ class Display:
 
 
 class Renderer:
-    def __init__(self, shader=None):
+    def __init__(self, shader: 'ShaderProgram' = None):
         self.shader = shader
         # shader.start()
         # shader.load_projection_matrix(utils.create_projection_matrix(Display.width, Display.height))
@@ -112,8 +104,7 @@ class Renderer:
         # self.shader = shader
 
     # noinspection PyMethodMayBeStatic
-    def prepare(self):
-        # type: () -> None
+    def prepare(self) -> None:
         """
         Prepares the window before rendering.
         Returns:
@@ -122,8 +113,7 @@ class Renderer:
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
         glClearColor(0, 0, 0, 1)
 
-    def render(self, material, transformation_matrix=None):
-        # type: (utils.Material, Matrix4f) -> None
+    def render(self, material: Material, transformation_matrix: Matrix4f = None) -> None:
         """
         Renders the material on the screen.
         Args:
@@ -174,8 +164,7 @@ class Loader:
         pass
 
     @staticmethod
-    def load_material(sx, sy, texture_path=None):
-        # type: (int, int, str) -> Material
+    def load_material(sx: float, sy: float, texture_path: str = None) -> Material:
         """
         Loads the vertex, indices and texture data to a VAO, and returns a :class:`Material`
         object.
@@ -194,14 +183,14 @@ class Loader:
             sx/2, sy/2
         ], dtype=np.float32)
 
-        vao = Loader.__create_vao()  # type: int
+        vao: int = Loader.__create_vao()
         tex = 0
         Loader.__bind_vao(vao)
         Loader.__bind_indices_buffer(Loader.__indices)
 
         if texture_path is not None:
             Loader.__store_data_in_attribute_list(attribute_number=1, coord_dim=2, data=Loader.__texCoords)
-            tex = Loader.__load_texture(texture_path)  # type: int
+            tex: int = Loader.__load_texture(texture_path)
 
         Loader.__store_data_in_attribute_list(attribute_number=0, coord_dim=2, data=vertices)
         Loader.__unbind_vao()
@@ -209,7 +198,7 @@ class Loader:
         return utils.Material(vao, len(Loader.__indices), tex)
 
     @staticmethod
-    def clean_up():
+    def clean_up() -> None:
         """
         Deletes the created VAOs, VBOs and textures.
         Returns:
@@ -225,18 +214,18 @@ class Loader:
             glDeleteTextures(1, tex)
 
     @staticmethod
-    def __create_vao():
+    def __create_vao() -> int:
         """
         creates a VAO, tracks it and returns it.
         Returns:
             id of the created VAO
         """
-        vao = glGenVertexArrays(1)  # type: int
+        vao: int = glGenVertexArrays(1)
         Loader.__vaos.append(vao)
         return vao
 
     @staticmethod
-    def __bind_vao(vao):
+    def __bind_vao(vao: int) -> None:
         """
         Binds the given VAO
         Args:
@@ -249,7 +238,7 @@ class Loader:
         glBindVertexArray(vao)
 
     @staticmethod
-    def __unbind_vao():
+    def __unbind_vao() -> None:
         """
         unbinds the currently bound VAO
         Returns:
@@ -258,7 +247,7 @@ class Loader:
         glBindVertexArray(0)
 
     @staticmethod
-    def __bind_indices_buffer(indices):
+    def __bind_indices_buffer(indices: np.ndarray) -> None:
         """
         creates a VBO, binds it, and stores the indices data in it. Used for storing
         indices data only.
@@ -274,7 +263,7 @@ class Loader:
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices, GL_STATIC_DRAW)
 
     @staticmethod
-    def __store_data_in_attribute_list(attribute_number, coord_dim, data):
+    def __store_data_in_attribute_list(attribute_number: int, coord_dim: int, data: np.ndarray) -> None:
         """
         creates a VBO, binds it, stores data in it and unbinds it.
         Args:
@@ -296,7 +285,7 @@ class Loader:
         Loader.__vbos.append(vbo)
 
     @staticmethod
-    def __load_texture(path):
+    def __load_texture(path: str) -> int:
         """
         Loads the texture from file
         Args:
@@ -309,7 +298,7 @@ class Loader:
         img = Image.open(path)
         img_data = np.fromstring(img.tobytes(), np.uint8)
 
-        tex = glGenTextures(1)  # type: int
+        tex: int = glGenTextures(1)
         glPixelStorei(GL_UNPACK_ALIGNMENT, 1)
         glBindTexture(GL_TEXTURE_2D, tex)
 
@@ -328,13 +317,10 @@ class Loader:
         return tex
 
 
-class ShaderProgram(object):
-    __metaclass__ = ABCMeta
+class ShaderProgram(ABC):
 
-    def __init__(self, vertex_shader, fragment_shader):
-        # type: (str, str) -> None
-
-        self.program = glCreateProgram()  # type: int
+    def __init__(self, vertex_shader: str, fragment_shader: str) -> None:
+        self.program: int = glCreateProgram()
         self.vs = ShaderProgram.__load(vertex_shader, GL_VERTEX_SHADER)
         self.fs = ShaderProgram.__load(fragment_shader, GL_FRAGMENT_SHADER)
 
@@ -347,8 +333,7 @@ class ShaderProgram(object):
         self.get_all_uniform_locations()
         self.connect_texture_units()
 
-    def get_uniform_location(self, var_name):
-        # type: (str) -> int
+    def get_uniform_location(self, var_name: str) -> int:
         """
         Returns the location of the uniform variable in the shader program.
         Args:
@@ -359,8 +344,7 @@ class ShaderProgram(object):
         """
         return glGetUniformLocation(self.program, var_name)
 
-    def bind_attribute(self, attribute_number, variable):
-        # type: (int, str) -> None
+    def bind_attribute(self, attribute_number: int, variable: str) -> None:
         """
         Binds the attribute (variable) used in the shader program to the attribute
         location in the currently bound VAO.
@@ -374,8 +358,7 @@ class ShaderProgram(object):
         glBindAttribLocation(self.program, attribute_number, variable)
 
     @staticmethod
-    def load_float(location, value):
-        # type: (int, float) -> None
+    def load_float(location: int, value: float):
         """
         Loads a float value to the uniform variable.
         Args:
@@ -388,8 +371,7 @@ class ShaderProgram(object):
         glUniform1f(location, value)
 
     @staticmethod
-    def load_vector2f(location, vector):
-        # type: (int, utils.Vector2f) -> None
+    def load_vector2f(location: int, vector: Vector2f) -> None:
         """
         Loads a 2D Vector value to the uniform variable.
         Args:
@@ -402,8 +384,7 @@ class ShaderProgram(object):
         glUniform2f(location, vector.x, vector.y)
 
     @staticmethod
-    def load_vector3f(location, vector):
-        # type: (int, utils.Vector3f) -> None
+    def load_vector3f(location: int, vector: Vector3f) -> None:
         """
         Loads a 3D Vector value to the uniform variable.
         Args:
@@ -416,8 +397,7 @@ class ShaderProgram(object):
         glUniform3f(location, vector.x, vector.y, vector.z)
 
     @staticmethod
-    def load_vector4f(location, vector):
-        # type: (int, utils.Vector4f) -> None
+    def load_vector4f(location: int, vector: Vector4f) -> None:
         """
         Loads a 4D Vector value to the uniform variable.
         Args:
@@ -430,8 +410,7 @@ class ShaderProgram(object):
         glUniform4f(location, vector.x, vector.y, vector.z, vector.w)
 
     @staticmethod
-    def load_boolean(location, value):
-        # type: (int, bool) -> None
+    def load_boolean(location: int, value: bool) -> None:
         """
         Loads a boolean value to the uniform variable.
         Args:
@@ -444,8 +423,7 @@ class ShaderProgram(object):
         glUniform1f(location, 1 if value else 0)
 
     @staticmethod
-    def load_int(location, value):
-        # type: (int, int) -> None
+    def load_int(location: int, value: int) -> None:
         """
         Loads an int value to the uniform variable.
         Args:
@@ -458,8 +436,7 @@ class ShaderProgram(object):
         glUniform1i(location, value)
 
     @staticmethod
-    def load_matrix(location, matrix):
-        # type: (int, utils.Matrix4f) -> None
+    def load_matrix(location: int, matrix: Matrix4f) -> None:
         """
         Loads a matrix value to the uniform variable.
         Args:
@@ -488,7 +465,7 @@ class ShaderProgram(object):
         """
         source = "".join(open(path).readlines())
 
-        shader = glCreateShader(tp)  # type: int
+        shader: int = glCreateShader(tp)
         glShaderSource(shader, source)
         glCompileShader(shader)
 
@@ -499,8 +476,7 @@ class ShaderProgram(object):
 
         return shader
 
-    def start(self):
-        # type: () -> None
+    def start(self) -> None:
         """
         Start using the shader program.
         Returns:
@@ -509,8 +485,7 @@ class ShaderProgram(object):
         glUseProgram(self.program)
 
     # noinspection PyMethodMayBeStatic
-    def stop(self):
-        # type: () -> None
+    def stop(self) -> None:
         """
         Stop using the shader program.
         Returns:
@@ -518,8 +493,7 @@ class ShaderProgram(object):
         """
         glUseProgram(0)
 
-    def clean_up(self):
-        # type: () -> None
+    def clean_up(self) -> None:
         """
         Stops the shader program, detaches the shaders and deletes it.
         Returns:
@@ -533,16 +507,13 @@ class ShaderProgram(object):
         glDeleteShader(self.fs)
 
     @abstractmethod
-    def bind_attributes(self):
-        # type: () -> None
+    def bind_attributes(self) -> None:
         pass
 
     @abstractmethod
-    def get_all_uniform_locations(self):
-        # type: () -> None
+    def get_all_uniform_locations(self) -> None:
         pass
 
     @abstractmethod
-    def connect_texture_units(self):
-        # type: () -> None
+    def connect_texture_units(self) -> None:
         pass

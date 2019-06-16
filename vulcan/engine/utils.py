@@ -1,8 +1,7 @@
 import numpy as np
 
 
-def create_transformation_matrix(translation, rot, scale):
-    # type: (Vector3f, Vector3f, Vector3f) -> Matrix4f
+def create_transformation_matrix(translation: 'Vector3f', rot: 'Vector3f', scale: 'Vector3f') -> 'Matrix4f':
     """
     Creates a transformation matrix.
     Args:
@@ -25,8 +24,7 @@ def create_transformation_matrix(translation, rot, scale):
     return matrix
 
 
-def create_projection_matrix(width, height):
-    # type: (int, int) -> Matrix4f
+def create_projection_matrix(width: int, height: int) -> 'Matrix4f':
     """
     Creates a projection matrix.
     Returns:
@@ -54,26 +52,25 @@ def create_projection_matrix(width, height):
 
 
 class Material:
-    def __init__(self, vao, vertex_count, tex=None):
-        # type: (int, int, int) -> None
+    def __init__(self, vao: int, vertex_count: int, tex: int = None) -> None:
         self.vao = vao
         self.vertex_count = vertex_count
         self.tex = tex
 
     @property
-    def vao_id(self):
+    def vao_id(self) -> int:
         return self.vao
 
     @property
-    def tex_id(self):
+    def tex_id(self) -> int:
         return self.tex
 
 
 class Matrix4f:
-    def __init__(self):
+    def __init__(self) -> None:
         self.data = np.identity(4, dtype=np.float32)
 
-    def set_identity(self):
+    def set_identity(self) -> None:
         """
         Sets the matrix to the identity matrix.
         Returns:
@@ -81,8 +78,7 @@ class Matrix4f:
         """
         self.data = np.identity(4, dtype=np.float32)
 
-    def translate(self, vector, dest=None):
-        # type: (Vector3f, Matrix4f) -> Matrix4f
+    def translate(self, vector: 'Vector3f', dest: 'Matrix4f' = None) -> 'Matrix4f':
         """
         Translates the matrix.
         Args:
@@ -97,8 +93,7 @@ class Matrix4f:
         return Matrix4f.apply_translation(vector=vector, src=self, dest=dest)
 
     @staticmethod
-    def apply_translation(vector, src, dest=None):
-        # type: (Vector3f, Matrix4f, Matrix4f) -> Matrix4f
+    def apply_translation(vector: 'Vector3f', src: 'Matrix4f', dest: 'Matrix4f' = None) -> 'Matrix4f':
         """
         Translates the vulcan matrix.
         Args:
@@ -119,8 +114,7 @@ class Matrix4f:
 
         return dest
 
-    def rotate(self, angle, axis, dest=None):
-        # type: (float, Vector3f, Matrix4f) -> Matrix4f
+    def rotate(self, angle: float, axis: 'Vector3f', dest: 'Matrix4f' = None) -> 'Matrix4f':
         """
         Applies rotation transformation to the matrix.
         Args:
@@ -136,8 +130,7 @@ class Matrix4f:
         return Matrix4f.apply_rotation(angle=angle, axis=axis, src=self, dest=dest)
 
     @staticmethod
-    def apply_rotation(angle, axis, src, dest=None):
-        # type: (float, Vector3f, Matrix4f, Matrix4f) -> Matrix4f
+    def apply_rotation(angle: float, axis: 'Vector3f', src: 'Matrix4f', dest: 'Matrix4f' = None):
         """
         Applies rotation transformation to the vulcan matrix.
         Args:
@@ -194,8 +187,7 @@ class Matrix4f:
 
         return dest
 
-    def scale(self, vector, dest=None):
-        # type: (Vector3f, Matrix4f) -> Matrix4f
+    def scale(self, vector: 'Vector3f', dest: 'Matrix4f' = None) -> 'Matrix4f':
         """
        Applies scale transformation on the matrix and stores result in dest.
        Args:
@@ -210,8 +202,7 @@ class Matrix4f:
         return Matrix4f.apply_scale(vector=vector, src=self, dest=dest)
 
     @staticmethod
-    def apply_scale(vector, src, dest=None):
-        # type: (Vector3f, Matrix4f, Matrix4f) -> Matrix4f
+    def apply_scale(vector: 'Vector3f', src: 'Matrix4f', dest: 'Matrix4f' = None) -> 'Matrix4f':
         """
         Applies scale transformation on the vulcan matrix and stores result in dest.
         Args:
@@ -240,143 +231,142 @@ class Matrix4f:
         return dest
 
     @property
-    def m00(self):
+    def m00(self) -> np.float32:
         return self.data[0][0]
 
     @m00.setter
-    def m00(self, value):
+    def m00(self, value) -> None:
         self.data[0][0] = value
 
     @property
-    def m01(self):
+    def m01(self) -> np.float32:
         return self.data[0][1]
 
     @m01.setter
-    def m01(self, value):
+    def m01(self, value) -> None:
         self.data[0][1] = value
 
     @property
-    def m02(self):
+    def m02(self) -> np.float32:
         return self.data[0][2]
 
     @m02.setter
-    def m02(self, value):
+    def m02(self, value) -> None:
         self.data[0][2] = value
 
     @property
-    def m03(self):
+    def m03(self) -> np.float32:
         return self.data[0][3]
 
     @m03.setter
-    def m03(self, value):
+    def m03(self, value) -> None:
         self.data[0][3] = value
 
     @property
-    def m10(self):
+    def m10(self) -> np.float32:
         return self.data[1][0]
 
     @m10.setter
-    def m10(self, value):
+    def m10(self, value) -> None:
         self.data[1][0] = value
 
     @property
-    def m11(self):
+    def m11(self) -> np.float32:
         return self.data[1][1]
 
     @m11.setter
-    def m11(self, value):
+    def m11(self, value) -> None:
         self.data[1][1] = value
 
     @property
-    def m12(self):
+    def m12(self) -> np.float32:
         return self.data[1][2]
 
     @m12.setter
-    def m12(self, value):
+    def m12(self, value) -> None:
         self.data[1][2] = value
 
     @property
-    def m13(self):
+    def m13(self) -> np.float32:
         return self.data[1][3]
 
     @m13.setter
-    def m13(self, value):
+    def m13(self, value) -> None:
         self.data[1][3] = value
 
     @property
-    def m20(self):
+    def m20(self) -> np.float32:
         return self.data[2][0]
 
     @m20.setter
-    def m20(self, value):
+    def m20(self, value) -> None:
         self.data[2][0] = value
 
     @property
-    def m21(self):
+    def m21(self) -> np.float32:
         return self.data[2][1]
 
     @m21.setter
-    def m21(self, value):
+    def m21(self, value) -> None:
         self.data[2][1] = value
 
     @property
-    def m22(self):
+    def m22(self) -> np.float32:
         return self.data[2][2]
 
     @m22.setter
-    def m22(self, value):
+    def m22(self, value) -> None:
         self.data[2][2] = value
 
     @property
-    def m23(self):
+    def m23(self) -> np.float32:
         return self.data[2][3]
 
     @m23.setter
-    def m23(self, value):
+    def m23(self, value) -> None:
         self.data[2][3] = value
 
     @property
-    def m30(self):
+    def m30(self) -> np.float32:
         return self.data[3][0]
 
     @m30.setter
-    def m30(self, value):
+    def m30(self, value) -> None:
         self.data[3][0] = value
 
     @property
-    def m31(self):
+    def m31(self) -> np.float32:
         return self.data[3][1]
 
     @m31.setter
-    def m31(self, value):
+    def m31(self, value) -> None:
         self.data[3][1] = value
 
     @property
-    def m32(self):
+    def m32(self) -> np.float32:
         return self.data[3][2]
 
     @m32.setter
-    def m32(self, value):
+    def m32(self, value) -> None:
         self.data[3][2] = value
 
     @property
-    def m33(self):
+    def m33(self) -> np.float32:
         return self.data[3][3]
 
     @m33.setter
-    def m33(self, value):
+    def m33(self, value) -> None:
         self.data[3][3] = value
 
 
 class Vector2f:
-    def __init__(self, x=None, y=None):
+    def __init__(self, x=None, y=None, dtype=np.int32):
         if x is None or y is None:
-            self.vec = np.zeros((1, 2), dtype=int)
+            self.vec = np.zeros((1, 2), dtype=dtype)
         else:
             self.vec = np.array([x, y])
 
-    def set(self, new):
-        # type: (Vector2f) -> None
+    def set(self, new: 'Vector2f') -> None:
         """
         Sets the value of self to the value of new
         Args:
@@ -389,31 +379,30 @@ class Vector2f:
         self.y = new.y
 
     @property
-    def x(self):
+    def x(self) -> int:
         return self.vec[0]
 
     @x.setter
-    def x(self, value):
+    def x(self, value) -> None:
         self.vec[0] = value
 
     @property
-    def y(self):
+    def y(self) -> int:
         return self.vec[1]
 
     @y.setter
-    def y(self, value):
+    def y(self, value) -> None:
         self.vec[1] = value
 
 
 class Vector3f:
-    def __init__(self, x=None, y=None, z=None):
+    def __init__(self, x=None, y=None, z=None, dtype=np.int32):
         if x is None or y is None or z is None:
-            self.vec = np.zeros((1, 3), dtype=int)
+            self.vec = np.zeros((1, 3), dtype=dtype)
         else:
             self.vec = np.array([x, y, z])
 
-    def set(self, new):
-        # type: (Vector3f) -> None
+    def set(self, new: 'Vector3f') -> None:
         """
         Sets the value of self to the value of new
         Args:
@@ -427,39 +416,38 @@ class Vector3f:
         self.z = new.z
 
     @property
-    def x(self):
+    def x(self) -> int:
         return self.vec[0]
 
     @x.setter
-    def x(self, value):
+    def x(self, value) -> None:
         self.vec[0] = value
 
     @property
-    def y(self):
+    def y(self) -> int:
         return self.vec[1]
 
     @y.setter
-    def y(self, value):
+    def y(self, value) -> None:
         self.vec[1] = value
 
     @property
-    def z(self):
+    def z(self) -> int:
         return self.vec[2]
 
     @z.setter
-    def z(self, value):
+    def z(self, value) -> None:
         self.vec[2] = value
 
 
 class Vector4f:
-    def __init__(self, x=None, y=None, z=None, w=None):
+    def __init__(self, x=None, y=None, z=None, w=None, dtype=np.int32):
         if x is None or y is None or z is None or w is None:
-            self.vec = np.zeros((1, 4), dtype=int)
+            self.vec = np.zeros((1, 4), dtype=dtype)
         else:
             self.vec = np.array([x, y, z, w])
 
-    def set(self, new):
-        # type: (Vector4f) -> None
+    def set(self, new: 'Vector4f') -> None:
         """
         Sets the value of self to the value of new
         Args:
@@ -474,33 +462,33 @@ class Vector4f:
         self.w = new.w
 
     @property
-    def x(self):
+    def x(self) -> int:
         return self.vec[0]
 
     @x.setter
-    def x(self, value):
+    def x(self, value) -> None:
         self.vec[0] = value
 
     @property
-    def y(self):
+    def y(self) -> int:
         return self.vec[1]
 
     @y.setter
-    def y(self, value):
+    def y(self, value) -> None:
         self.vec[1] = value
 
     @property
-    def z(self):
+    def z(self) -> int:
         return self.vec[2]
 
     @z.setter
-    def z(self, value):
+    def z(self, value) -> None:
         self.vec[2] = value
 
     @property
-    def w(self):
+    def w(self) -> int:
         return self.vec[3]
 
     @w.setter
-    def w(self, value):
+    def w(self, value) -> None:
         self.vec[3] = value
