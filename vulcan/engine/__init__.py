@@ -105,12 +105,11 @@ class Display:
 
 class Renderer:
     def __init__(self, shader=None):
-        self.shader = None
-        if shader is not None:
-            shader.start()
-            shader.load_projection_matrix(utils.create_projection_matrix(Display.width, Display.height))
-            shader.stop()
-            self.shader = shader
+        self.shader = shader
+        # shader.start()
+        # shader.load_projection_matrix(utils.create_projection_matrix(Display.width, Display.height))
+        # shader.stop()
+        # self.shader = shader
 
     # noinspection PyMethodMayBeStatic
     def prepare(self):
@@ -134,8 +133,8 @@ class Renderer:
         Returns:
             None
         """
-        if self.shader is not None:
-            self.shader.load_transformation_matrix(transformation_matrix)
+
+        self.shader.load_transformation_matrix(transformation_matrix)
 
         glBindVertexArray(material.vao_id)
 
@@ -470,7 +469,7 @@ class ShaderProgram(object):
         Returns:
             None
         """
-        glUniformMatrix4fv(location=location, count=1, transpose=False, value=matrix.data)
+        glUniformMatrix4fv(location, 1, GL_FALSE, matrix.data)
 
     @staticmethod
     def __load(path, tp):

@@ -1,6 +1,8 @@
 from abc import ABCMeta, abstractmethod
 from typing import Type, Any, List
 
+import numpy as np
+
 from vulcan.engine.utils import Vector2f, create_transformation_matrix, Vector3f, Matrix4f, Material
 
 
@@ -10,7 +12,7 @@ class Entity:
         self.id = entity_id
         self._components = list()  # type: List['Component']
 
-    def add_component(self, component):
+    def attach(self, component):
         # type: (Component) -> None
         """
         Appends a component to the list of components.
@@ -22,7 +24,7 @@ class Entity:
         """
         self._components.append(component)
 
-    def remove_component(self, cls):
+    def detach(self, cls):
         # type: (Type[Component]) -> None
         """
         Removes a component that is the instance of cls.
