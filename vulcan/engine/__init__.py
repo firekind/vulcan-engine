@@ -1,11 +1,11 @@
 import sys
+from abc import ABC, abstractmethod
 
 import glfw
 import numpy as np
 
 from OpenGL.GL import *
 from PIL import Image
-from abc import ABC, abstractmethod
 from vulcan.engine.utils import Matrix4f, Material, Vector2f, Vector3f, Vector4f
 
 
@@ -33,13 +33,13 @@ class Display:
         Display.height = height
 
         if not glfw.init():
-            return
+            return None
 
         Display.add_window_hints()
         Display.window = glfw.create_window(width, height, title, None, None)
         if not Display.window:
             glfw.terminate()
-            return
+            return None
 
         glfw.make_context_current(Display.window)
 
@@ -195,7 +195,7 @@ class Loader:
         Loader.__store_data_in_attribute_list(attribute_number=0, coord_dim=2, data=vertices)
         Loader.__unbind_vao()
 
-        return utils.Material(vao, len(Loader.__indices), tex)
+        return Material(vao, len(Loader.__indices), tex)
 
     @staticmethod
     def clean_up() -> None:

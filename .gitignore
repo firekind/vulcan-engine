@@ -4,6 +4,6 @@
 .idea/**/usage.statistics.xml
 .idea/**/dictionaries
 .idea/**/shelf
-
+*.pyc
 venv/
 *.egg-info/
