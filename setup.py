@@ -9,7 +9,7 @@ setup(
         'PyOpenGL==3.1.3b1',
         'PyOpenGL-accelerate==3.1.3b1',
         'glfw==1.8.1',
-        'Pillow==6.0.0',
+        'Pillow==8.1.1',
     ],
     author='Shyamant'
 )
